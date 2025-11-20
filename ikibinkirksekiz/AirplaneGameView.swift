@@ -12,10 +12,11 @@ struct AirplaneGameView: View {
                     scene: game.scene,
                     pointOfView: game.cameraNode,
                     options: [.allowsCameraControl],
-                    delegate: game,
                     preferredFramesPerSecond: 60,
-                    antialiasingMode: .multisampling4X
+                    antialiasingMode: .multisampling4X,
+                    delegate: game
                 )
+
                 // The drag gesture maps the user's finger movement to the plane's X/Y target.
                 // Translation is normalized by the view size to keep movement consistent.
                 .gesture(
@@ -147,7 +148,11 @@ final class AirplaneSceneController: NSObject, ObservableObject, SCNSceneRendere
         directional.light = SCNLight()
         directional.light?.type = .directional
         directional.light?.intensity = 1000
-        directional.eulerAngles = SCNVector3(-.pi / 3, .pi / 4, 0)
+        let angleX = -Float.pi / 3
+        let angleY =  Float.pi / 4
+
+        directional.eulerAngles = SCNVector3(angleX, angleY, 0)
+
         scene.rootNode.addChildNode(directional)
 
         // Simple ground.
