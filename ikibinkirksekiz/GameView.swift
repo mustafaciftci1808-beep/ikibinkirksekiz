@@ -56,26 +56,35 @@ struct GameView: View {
                     let vertical = value.translation.height
 
                     if abs(horizontal) > abs(vertical) {
-                        viewModel.move(horizontal > 0 ? .right : .left)
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            viewModel.move(horizontal > 0 ? .right : .left)
+                        }
                     } else {
-                        viewModel.move(vertical > 0 ? .down : .up)
+                        withAnimation(.easeInOut(duration: 0.15)) {
+                            viewModel.move(vertical > 0 ? .down : .up)
+                        }
                     }
                 }
         )
+        .animation(.easeInOut(duration: 0.15), value: viewModel.grid)
     }
 
     private func tile(for value: Int) -> some View {
+        let isFilled = value > 0
+
         ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .fill(color(for: value))
                 .frame(height: 80)
 
-            if value > 0 {
+            if isFilled {
                 Text("\(value)")
                     .font(.system(size: value < 100 ? 32 : 24, weight: .heavy))
                     .foregroundColor(value <= 4 ? Color(red: 119/255, green: 110/255, blue: 101/255) : .white)
             }
         }
+        .scaleEffect(isFilled ? 1 : 0.98)
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: value)
     }
 
     private func scoreCard(title: String, value: Int) -> some View {
@@ -97,7 +106,9 @@ struct GameView: View {
 
     private var newGameButton: some View {
         Button(action: {
-            viewModel.startNewGame()
+            withAnimation(.easeInOut(duration: 0.15)) {
+                viewModel.startNewGame()
+            }
         }) {
             Text("New Game")
                 .font(.headline)
