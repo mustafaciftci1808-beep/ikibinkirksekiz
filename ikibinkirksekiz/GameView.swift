@@ -2,6 +2,7 @@ import SwiftUI
 
 struct GameView: View {
     @StateObject private var viewModel = GameViewModel()
+    @State private var showingAirplaneGame = false
 
     var body: some View {
         ZStack {
@@ -11,9 +12,12 @@ struct GameView: View {
             VStack(spacing: 20) {
                 header
                 board
-                newGameButton
+                actionButtons
             }
             .padding()
+        }
+        .fullScreenCover(isPresented: $showingAirplaneGame) {
+            AirplaneGameView()
         }
     }
 
@@ -104,22 +108,43 @@ struct GameView: View {
         )
     }
 
-    private var newGameButton: some View {
-        Button(action: {
-            withAnimation(.easeInOut(duration: 0.15)) {
-                viewModel.startNewGame()
+    private var actionButtons: some View {
+        VStack(spacing: 12) {
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    viewModel.startNewGame()
+                }
+            }) {
+                Text("Yeni Oyun")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(red: 143/255, green: 122/255, blue: 102/255))
+                            .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                    )
             }
-        }) {
-            Text("New Game")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(.horizontal, 32)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(red: 143/255, green: 122/255, blue: 102/255))
-                        .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
-                )
+
+            Button(action: {
+                showingAirplaneGame = true
+            }) {
+                Text("Uçak Oyununa Geç")
+                    .font(.headline)
+                    .foregroundColor(Color(red: 119/255, green: 110/255, blue: 101/255))
+                    .padding(.horizontal, 28)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color(red: 187/255, green: 173/255, blue: 160/255), lineWidth: 2)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.white)
+                            )
+                            .shadow(color: .black.opacity(0.08), radius: 3, x: 0, y: 2)
+                    )
+            }
         }
     }
 
