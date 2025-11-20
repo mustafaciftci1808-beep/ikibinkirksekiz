@@ -72,7 +72,7 @@ struct GameView: View {
     private func tile(for value: Int) -> some View {
         let isFilled = value > 0
 
-        ZStack {
+        return ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .fill(color(for: value))
                 .frame(height: 80)
